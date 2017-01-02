@@ -1,0 +1,1 @@
+INSERT INTO task (id, name) VALUES (10, 'TaskTen');

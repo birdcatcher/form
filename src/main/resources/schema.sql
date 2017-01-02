@@ -1,0 +1,5 @@
+CREATE TABLE task (
+	id NUMBER(9) PRIMARY KEY, 
+	name VARCHAR2(255)
+);
+CREATE SEQUENCE task_seq;
