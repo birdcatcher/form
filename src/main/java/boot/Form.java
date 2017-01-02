@@ -6,25 +6,28 @@ import java.util.*;
 import javax.persistence.*;
 
 @Entity
-public class Task {
+public class Form {
 
     @Id
     //@GeneratedValue(strategy=GenerationType.AUTO)
     // Oracle requires creating sequence and table
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_gen")
-    @SequenceGenerator(name="seq_gen", sequenceName="task_seq", allocationSize=25)
+    @SequenceGenerator(name="seq_gen", sequenceName="form_seq", allocationSize=25)
     private Long id;
     
     private String name;
+    private String title;
+    private String authorId;
+    private String schema;
 
-    public Task() {
+    public Form() {
     }
 
-    public Task(String name) {
+    public Form(String name) {
         this.name = name;
     }
 
-    public Task(Long id, String name) {
+    public Form(Long id, String name) {
         this.id = id;
         this.name = name;
     }
@@ -36,6 +39,18 @@ public class Task {
 
     public String getName() {
         return name;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getAuthorId() {
+        return authorId;
+    }
+
+    public String getSchema() {
+        return schema;
     }
 
     // public String toString() {

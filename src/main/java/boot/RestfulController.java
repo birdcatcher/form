@@ -31,78 +31,71 @@ public class RestfulController {
     JdbcTemplate jdbc;
 
     // TODO: create CRUD repository
-    public interface TaskRepo extends CrudRepository<Task, Long> {
+    public interface FormRepo extends CrudRepository<Form, Long> {
 
-        @Query(value = "SELECT * FROM task WHERE name LIKE ?1%", nativeQuery = true)
-        List<Task> findByName(String name);
+        @Query(value = "SELECT * FROM form WHERE name LIKE ?1%", nativeQuery = true)
+        List<Form> findByName(String name);
 
     }    
     @Autowired
-    RestfulController.TaskRepo repo;
+    RestfulController.FormRepo formRepo;
 
     // TODO: initialize controller
     @PostConstruct
     public void initialize() {
-        repo.save(new Task("TaskOne"));
-        repo.save(new Task("TaskTwo"));
-        repo.save(new Task("TaskThree"));
+        formRepo.save(new Form("FormOne"));
 
-        // jdbc directly, table and sequence are created via schema.sql
-        List<Object[]> values = Arrays.asList("TaskFour", "TaskFive")
-            .stream().map(value -> value.split("$"))
-            .collect(Collectors.toList());
-        jdbc.batchUpdate(
-            "INSERT INTO task (id, name) VALUES (task_seq.nextval, ?)", values);
-
-        log.info("Added 5 tasks");
+        log.info("Added 1 form");
    	}
 
-	@RequestMapping(value="/task", method=RequestMethod.GET)
-    public Iterable<Task> searchTask(
-    	@RequestParam(value="name", required=false) String[] names) {
+    // Form CRUD
+    @RequestMapping(value="/form", method=RequestMethod.GET)
+    public Iterable<Form> searchForm(
+        @RequestParam(value="name", required=false) String[] names) {
         // name=val1&name=val2 passed as an array
         if (names != null) {
-            ArrayList<Task> tasks = new ArrayList<Task>();
+            ArrayList<Form> forms = new ArrayList<Form>();
             for (String name: names) 
-                tasks.addAll(repo.findByName(name));
-            return tasks;
+                forms.addAll(formRepo.findByName(name));
+            return forms;
         } else {
-            return repo.findAll();
+            return formRepo.findAll();
         }
     }
 
-    @RequestMapping(value="/task/latest", method=RequestMethod.GET)
-    public List<Task> latestTask() {
+    @RequestMapping(value="/form/latest", method=RequestMethod.GET)
+    public List<Form> latestForm() {
         // jdbc directly with row mapper
         return jdbc.query(
-            "SELECT TOP 2 id, name FROM task ORDER BY id DESC", new Object[] {},
-            (rs, rowNum) -> new Task(rs.getLong("id"), rs.getString("name"))
+            "SELECT TOP 2 id, name FROM form ORDER BY id DESC", new Object[] {},
+            (rs, rowNum) -> new Form(rs.getLong("id"), rs.getString("name"))
         );
     }
 
     // Having Task as input will make Spring do the following
     // 1. create a Task object and 
     // 2. map client input to object attribute with same name
-	@RequestMapping(value="/task", method=RequestMethod.POST)
-    public Task createTask(@RequestBody Task task) {
-    	return repo.save(task);
+    @RequestMapping(value="/form", method=RequestMethod.POST)
+    public Form createForm(@RequestBody Form form) {
+        return formRepo.save(form);
     }
 
-	@RequestMapping(value="/task/{id}", method=RequestMethod.GET)
-    public Task getTask(@PathVariable Long id) {
-    	return repo.findOne(id);
+    @RequestMapping(value="/form/{id}", method=RequestMethod.GET)
+    public Form getForm(@PathVariable Long id) {
+        return formRepo.findOne(id);
     }
 
-	@RequestMapping(value="/task/{id}", method=RequestMethod.PUT)
-    public Task updateTask(@RequestBody Task task) {
-        return repo.save(task);
+    @RequestMapping(value="/form/{id}", method=RequestMethod.PUT)
+    public Form updateForm(@RequestBody Form form) {
+        return formRepo.save(form);
     }
 
-	@RequestMapping(value="/task/{id}", method=RequestMethod.DELETE)
-    public Task deleteTask(@PathVariable Long id) {
-        Task t = repo.findOne(id);
-    	repo.delete(id);
+    @RequestMapping(value="/form/{id}", method=RequestMethod.DELETE)
+    public Form deleteForm(@PathVariable Long id) {
+        Form f = formRepo.findOne(id);
+        formRepo.delete(id);
         // some js framework need return deleted data
-        return t;
+        return f;
     }
+
 }
