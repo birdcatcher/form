@@ -49,7 +49,7 @@ public class RestfulController {
    	}
 
     // Form CRUD
-    @RequestMapping(value="/form", method=RequestMethod.GET)
+    @RequestMapping(value="/forms", method=RequestMethod.GET)
     public Iterable<Form> searchForm(
         @RequestParam(value="name", required=false) String[] names) {
         // name=val1&name=val2 passed as an array
@@ -63,7 +63,7 @@ public class RestfulController {
         }
     }
 
-    @RequestMapping(value="/form/latest", method=RequestMethod.GET)
+    @RequestMapping(value="/forms/latest", method=RequestMethod.GET)
     public List<Form> latestForm() {
         // jdbc directly with row mapper
         return jdbc.query(
@@ -75,22 +75,25 @@ public class RestfulController {
     // Having Task as input will make Spring do the following
     // 1. create a Task object and 
     // 2. map client input to object attribute with same name
-    @RequestMapping(value="/form", method=RequestMethod.POST)
+    @RequestMapping(value="/forms", method=RequestMethod.POST)
     public Form createForm(@RequestBody Form form) {
+        log.info(form.getName());
+        log.info(form.getSchema());
         return formRepo.save(form);
     }
 
-    @RequestMapping(value="/form/{id}", method=RequestMethod.GET)
+    @RequestMapping(value="/forms/{id}", method=RequestMethod.GET)
     public Form getForm(@PathVariable Long id) {
         return formRepo.findOne(id);
     }
 
-    @RequestMapping(value="/form/{id}", method=RequestMethod.PUT)
+    @RequestMapping(value="/forms", method=RequestMethod.PUT)
     public Form updateForm(@RequestBody Form form) {
+        // json object must have id field 
         return formRepo.save(form);
     }
 
-    @RequestMapping(value="/form/{id}", method=RequestMethod.DELETE)
+    @RequestMapping(value="/forms/{id}", method=RequestMethod.DELETE)
     public Form deleteForm(@PathVariable Long id) {
         Form f = formRepo.findOne(id);
         formRepo.delete(id);

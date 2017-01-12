@@ -18,6 +18,8 @@ public class Form {
     private String name;
     private String title;
     private String authorId;
+
+    @Column(length = 10240)
     private String schema;
 
     public Form() {
