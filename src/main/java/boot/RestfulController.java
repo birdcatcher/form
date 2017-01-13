@@ -40,6 +40,17 @@ public class RestfulController {
     @Autowired
     RestfulController.FormRepo formRepo;
 
+    // TODO: create CRUD repository
+    public interface SubmissionRepo extends CrudRepository<Submission, Long> {
+
+        @Query(value = "SELECT * FROM form WHERE formId LIKE ?1%", nativeQuery = true)
+        List<Submission> findByFormId(String formId);
+
+    }    
+    @Autowired
+    RestfulController.SubmissionRepo submissionRepo;
+
+
     // TODO: initialize controller
     @PostConstruct
     public void initialize() {
@@ -99,6 +110,59 @@ public class RestfulController {
         formRepo.delete(id);
         // some js framework need return deleted data
         return f;
+    }
+
+    // Submision CRUD
+    @RequestMapping(value="/submissions", method=RequestMethod.GET)
+    public Iterable<Submission> searchSubmission(
+        @RequestParam(value="formId", required=false) String[] formIds) {
+        // name=val1&name=val2 passed as an array
+        if (formIds != null) {
+            ArrayList<Submission> submissions = new ArrayList<Submission>();
+            for (String id: formIds) 
+                submissions.addAll(submissionRepo.findByFormId(id));
+            return submissions;
+        } else {
+            return submissionRepo.findAll();
+        }
+    }
+
+    @RequestMapping(value="/submissions/latest", method=RequestMethod.GET)
+    public List<Submission> latestSubmission() {
+        // jdbc directly with row mapper
+        return jdbc.query(
+            "SELECT TOP 2 id, data FROM form ORDER BY id DESC", new Object[] {},
+            (rs, rowNum) -> new Submission(rs.getLong("id"), rs.getString("data"))
+        );
+    }
+
+    // Having Task as input will make Spring do the following
+    // 1. create a Task object and 
+    // 2. map client input to object attribute with same name
+    @RequestMapping(value="/submissions", method=RequestMethod.POST)
+    public Submission createSubmission(@RequestBody Submission s) {
+        log.info(s.getFormId());
+        log.info(s.getData());
+        return submissionRepo.save(s);
+    }
+
+    @RequestMapping(value="/submissions/{id}", method=RequestMethod.GET)
+    public Submission getSubmission(@PathVariable Long id) {
+        return submissionRepo.findOne(id);
+    }
+
+    @RequestMapping(value="/submissions", method=RequestMethod.PUT)
+    public Submission updateSubmission(@RequestBody Submission s) {
+        // json object must have id field 
+        return submissionRepo.save(s);
+    }
+
+    @RequestMapping(value="/submissions/{id}", method=RequestMethod.DELETE)
+    public Submission deleteSubmission(@PathVariable Long id) {
+        Submission s = submissionRepo.findOne(id);
+        submissionRepo.delete(id);
+        // some js framework need return deleted data
+        return s;
     }
 
 }
