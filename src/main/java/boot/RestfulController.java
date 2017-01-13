@@ -33,6 +33,7 @@ public class RestfulController {
     // TODO: create CRUD repository
     public interface FormRepo extends CrudRepository<Form, Long> {
 
+        // be very careful about the table, column name convention 
         @Query(value = "SELECT * FROM form WHERE name LIKE ?1%", nativeQuery = true)
         List<Form> findByName(String name);
 
@@ -43,7 +44,7 @@ public class RestfulController {
     // TODO: create CRUD repository
     public interface SubmissionRepo extends CrudRepository<Submission, Long> {
 
-        @Query(value = "SELECT * FROM form WHERE formId LIKE ?1%", nativeQuery = true)
+        @Query(value = "SELECT * FROM submission WHERE formId LIKE ?1%", nativeQuery = true)
         List<Submission> findByFormId(String formId);
 
     }    
@@ -116,7 +117,7 @@ public class RestfulController {
     @RequestMapping(value="/submissions", method=RequestMethod.GET)
     public Iterable<Submission> searchSubmission(
         @RequestParam(value="formId", required=false) String[] formIds) {
-        // name=val1&name=val2 passed as an array
+        // formId=val1&formId=val2 passed as an array
         if (formIds != null) {
             ArrayList<Submission> submissions = new ArrayList<Submission>();
             for (String id: formIds) 

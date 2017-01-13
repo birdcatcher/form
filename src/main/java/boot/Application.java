@@ -29,6 +29,9 @@ import java.util.*;
 import java.util.stream.*;
 import javax.annotation.*;
 
+import org.h2.server.web.WebServlet;
+import org.springframework.boot.context.embedded.ServletRegistrationBean;
+
 //@SpringBootApplication
 @Configuration
 @EnableAutoConfiguration
@@ -194,6 +197,17 @@ public class Application extends SpringBootServletInitializer {
             registry.addViewController("/login").setViewName("login");
         }
     }
+
+    // TODO disable H2 web console 
+	@Configuration
+	public class H2ConsoleConfiguration {
+	    @Bean
+	    ServletRegistrationBean h2servletRegistration(){
+	        ServletRegistrationBean registrationBean = new ServletRegistrationBean( new WebServlet());
+	        registrationBean.addUrlMappings("/console/*");
+	        return registrationBean;
+	    }
+	}
 
     @Override
     protected SpringApplicationBuilder configure(

@@ -14,11 +14,15 @@ public class Submission {
     @GeneratedValue(strategy=GenerationType.SEQUENCE, generator="seq_gen")
     @SequenceGenerator(name="seq_gen", sequenceName="submission_seq", allocationSize=25)
     private Long id;
-    
+
+    // By defaul it will be FORM_ID column name 
+    // Make column name exact as property name, add the following in property file
+    // spring.jpa.hibernate.naming.physical-strategy=org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     private String formId;
+
     private String authorId;
 
-    @Column(length = 10240)
+    @Column(length=10240)
     private String data;
 
     public Submission() {
