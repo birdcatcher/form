@@ -16,6 +16,7 @@ import org.springframework.security.core.authority.*;
 import org.springframework.security.config.annotation.authentication.builders.*;
 import org.springframework.security.config.annotation.web.builders.*;
 import org.springframework.security.config.annotation.web.configuration.*;
+import org.springframework.data.jpa.repository.config.*;
 
 import org.springframework.security.cas.*;
 import org.springframework.security.cas.web.*;
@@ -36,6 +37,7 @@ import org.springframework.boot.context.embedded.ServletRegistrationBean;
 @Configuration
 @EnableAutoConfiguration
 @ComponentScan
+@EnableJpaAuditing
 public class Application extends SpringBootServletInitializer {
 
 	// externalize application configuration

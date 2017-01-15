@@ -4,8 +4,14 @@ import org.springframework.data.repository.*;
 
 import java.util.*;
 import javax.persistence.*;
+import org.springframework.data.jpa.domain.support.*;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.annotation.CreatedBy;
+import org.springframework.data.annotation.LastModifiedBy;
 
 @Entity
+@EntityListeners(AuditingEntityListener.class)
 public class Form {
 
     @Id
@@ -23,6 +29,22 @@ public class Form {
     @Column(length = 10240)
     private String schema;
 
+    @Column(name = "created_date", nullable = false, updatable = false)
+    @CreatedDate
+    private long createdDate;
+ 
+    @Column(name = "modified_date")
+    @LastModifiedDate
+    private long modifiedDate;    
+
+    @Column(name = "created_by")
+    @CreatedBy
+    private String createdBy;
+ 
+    @Column(name = "modified_by")
+    @LastModifiedBy
+    private String modifiedBy;   
+ 
     public Form() {
     }
 
@@ -54,6 +76,22 @@ public class Form {
 
     public String getSchema() {
         return schema;
+    }
+
+    public long getCreatedDate() {
+        return createdDate;
+    }
+
+    public long getModifiedDate() {
+        return modifiedDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public String getModifiedBy() {
+        return modifiedBy;
     }
 
     // public String toString() {
