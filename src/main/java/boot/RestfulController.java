@@ -51,6 +51,10 @@ public class RestfulController {
     @Autowired
     RestfulController.SubmissionRepo submissionRepo;
 
+    // DynamoDB repo
+    @Autowired
+    ProductInfoRepository productInfoRepo;
+
 
     // TODO: initialize controller
     @PostConstruct
@@ -58,6 +62,8 @@ public class RestfulController {
         formRepo.save(new Form("FormOne"));
 
         log.info("Added 1 form");
+
+        productInfoRepo.save(new ProductInfo("1000", "800"));
    	}
 
     // Form CRUD

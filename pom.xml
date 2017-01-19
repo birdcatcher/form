@@ -50,6 +50,13 @@
             <artifactId>spring-jdbc</artifactId>
         </dependency>
 
+        <!-- DynamoDB -->
+        <dependency>
+            <groupId>com.amazonaws</groupId>
+            <artifactId>aws-java-sdk-dynamodb</artifactId>
+            <version>1.11.34</version>
+        </dependency>
+
         <!-- Default In-Memory DB -->        
         <dependency>
             <groupId>com.h2database</groupId>
